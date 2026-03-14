@@ -1715,11 +1715,27 @@ void editorProcessKeypress(void) {
             }
         } break;
 
+        case CTRL_UP: {
+            if (tab->cursor.y != 0)
+                tab->cursor.y--;
+            while (tab->cursor.y != 0 && file->row[tab->cursor.y].size > 0)
+                tab->cursor.y--;
+            tab->cursor.x =
+                editorRowRxToCx(&file->row[tab->cursor.y], tab->sx);
+        } break;
+
+        case CTRL_DOWN: {
+            if (tab->cursor.y + 1 < file->num_rows)
+                tab->cursor.y++;
+            while (tab->cursor.y + 1 < file->num_rows && file->row[tab->cursor.y].size > 0)
+                tab->cursor.y++;
+            tab->cursor.x =
+                editorRowRxToCx(&file->row[tab->cursor.y], tab->sx);
+        } break;
+
         // Scroll
         case WHEEL_UP:
-        case WHEEL_DOWN:
-        case CTRL_UP:
-        case CTRL_DOWN: {
+        case WHEEL_DOWN: {
             should_scroll = false;
             int scroll_dist = (c == WHEEL_UP || c == WHEEL_DOWN) ? 3 : 1;
             int scroll_dir = (c == WHEEL_UP || c == CTRL_UP) ? -1 : 1;
